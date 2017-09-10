@@ -1,25 +1,15 @@
-import React from 'react';
+import { StackNavigator } from 'react-navigation';
 
-import {
-  View,
-  Text,
-} from 'react-native';
+import HomeScreen from './HomeScreen';
 
-class HomeScreen extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
+const App = StackNavigator({
+   HomeScreen: { screen: HomeScreen },
+  },
+  {
+   headerMode: 'screen',
+   cardStyle: {
+     backgroundColor: '#fff'
+   },
+});
 
-    }
-  }
-
-  render () {
-    return (
-      <View>
-        <Text>Home Screen!</Text>
-      </View>
-    )
-  }
-}
-
-export default HomeScreen;
+export default App;
