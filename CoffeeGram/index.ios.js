@@ -9,11 +9,12 @@ import {
 } from 'react-native';
 
 import HomeScreen from './src/Components';
+import store from './src/store';
 
 export default class CoffeeGram extends Component {
   render() {
     return (
-      <Provider>
+      <Provider store={store}>
         <HomeScreen />
       </Provider>
     );
