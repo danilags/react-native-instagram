@@ -9,15 +9,17 @@ export const getImageSuccess = (data) => ({
   payload: data,
 })
 
-const rand = 1
-export const getImage = () => (
+// const page = 1
+export const getImage = (page) => (
   dispatch => (
-    axios.get(`https://api.500px.com/v1/photos?feature=popular&page=${rand}&image_size=600&consumer_key=QO3JD9Q4PSwqK07xnAK7VOrcO69UusGWnId1swJg`)
-      .then((res) => {
-        console.log("ini hasilnya bro ", res);
-        return dispatch(getImageSuccess (res.data))
-      })
-      .catch(err => dispatch(getImageSuccess(err)))
+    setTimeout(() => {
+      axios.get(`https://api.500px.com/v1/photos?feature=popular&page=${page}&image_size=600&consumer_key=QO3JD9Q4PSwqK07xnAK7VOrcO69UusGWnId1swJg`)
+        .then((res) => {
+          console.log("ini hasilnya bro ", res);
+          return dispatch(getImageSuccess (res.data))
+        })
+        .catch(err => dispatch(getImageSuccess(err)))
+    }, 1500)
   )
 )
 

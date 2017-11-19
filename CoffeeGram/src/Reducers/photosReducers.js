@@ -3,7 +3,7 @@ import {
 } from '../Actions/constants';
 
 const initialState = {
-  photos: '',
+  photos: [],
   successGetImages: false,
 }
 //
@@ -14,9 +14,13 @@ const initialState = {
 // }
 
 const photosReducers = (state = initialState, action) => {
+  console.log("ACTION PAYLOAD ", action.payload);
   switch (action.type) {
     case GET_IMAGES: {
-      return action.payload;
+      const { photos } = action.payload;
+      return {
+        ...state, photos: [...state.photos, ...photos]
+      }
 
     }
     default: return state;
