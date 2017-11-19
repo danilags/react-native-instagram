@@ -9,7 +9,7 @@ export const getImageSuccess = (data) => ({
   payload: data,
 })
 
-const rand = Math.floor(Math.random() * 999)
+const rand = 1
 export const getImage = () => (
   dispatch => (
     axios.get(`https://api.500px.com/v1/photos?feature=popular&page=${rand}&image_size=600&consumer_key=QO3JD9Q4PSwqK07xnAK7VOrcO69UusGWnId1swJg`)
