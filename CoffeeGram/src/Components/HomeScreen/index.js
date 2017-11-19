@@ -13,11 +13,13 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
+  ActivityIndicator,
 } from 'react-native';
 
 import { getImage } from '../../Actions/photosAction';
 
 import CardHomeScreen from '../Assets/CardHomeScreen';
+import FooterNav from '../Assets/FooterNav';
 
 class HomeScreen extends React.Component {
   constructor(props) {
@@ -52,16 +54,19 @@ class HomeScreen extends React.Component {
   };
 
   componentDidMount() {
-    this.props.getImage()
+    const { page } = this.state;
+    this.props.getImage(page)
   }
 
   _afterRefresh() {
     this.setState({refreshing: false})
-    this.props.getImage()
+
   }
 
-  _onRefresh() {
-    this.setState({refreshing: true});
+  handleRefresh = () => {
+    this.setState({refreshing: true}, () => {
+      this.props.getImage()
+    })
     this._afterRefresh()
   }
 
@@ -73,69 +78,51 @@ class HomeScreen extends React.Component {
     )
   }
 
+  handleLoadMore = () => {
+    const { page } = this.state;
+    this.setState({
+      page: this.state.page + 1
+    }, () => {
+      this.props.getImage(page)
+    })
+  }
+
+  renderFooter = () => {
+    return (
+      <View
+        style={{
+          paddingVertical: 20,
+        }}
+      >
+        <ActivityIndicator animating size="large" />
+      </View>
+    )
+  }
+
 
   render () {
-    console.log("HELLLOOOOO", this.props);
+    // console.log("HELLLOOOOO", this.props);
     return (
       <View style={{
           flex: 1,
           marginTop: 20,
       }}>
 
-      <FlatList
-        data={this.props.dataImage.photos}
-        renderItem={(item) => this._renderItem(item)}
-      />
+        <FlatList
+          data={this.props.dataImage.photos}
+          renderItem={(item) => this._renderItem(item)}
+          refreshing={this.state.refreshing}
+          onRefresh={this.handleRefresh}
+          onEndReached={this.handleLoadMore}
+          ListFooterComponent={this.renderFooter}
+          onEndThreshold={0}
+        />
 
-      <View style={styles.footerWrap}>
-          <View style={{ flex: 1, justifyContent: 'center', borderColor: '#ccc', backgroudColor: '#ccc', alignItems: 'center'}}>
-            <TouchableOpacity
-              onPress={() => { alert(true) }}
-
-            >
-              <Text style={{ color: '#000', fontSize: 13 }}>Home</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={{ flex: 1, justifyContent: 'center', width: '50%', borderColor: '#ccc', alignItems: 'center' }}>
-            <TouchableOpacity
-              onPress={() => alert()}
-
-            >
-              <Text style={{ color: '#000', fontSize: 13 }}>Search</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={{ flex: 1, justifyContent: 'center', width: '50%', borderColor: '#ccc', alignItems: 'center' }}>
-            <TouchableOpacity
-              onPress={() => alert('Hello')}
-
-            ><Text style={{ color: '#000', fontSize: 13 }}>Notification</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={{ flex: 1, justifyContent: 'center', width: '50%', borderColor: '#ccc', alignItems: 'center' }}>
-            <TouchableOpacity
-              onPress={() => alert('Hello')}
-
-            ><Text style={{ color: '#000', fontSize: 13 }}>Profile</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+        <FooterNav />
       </View>
     )
   }
 }
-
-const styles = StyleSheet.create({
-  footerWrap: {
-    position: 'absolute',
-    bottom: 0,
-    backgroundColor: '#F5F5F5',
-    width: '100%',
-    color: '#fff',
-    height: '12%',
-    flexDirection: 'row',
-    justifyContent: 'center',
-  }
-});
 
 
 const mapStateToProps = state => {
@@ -146,7 +133,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  getImage: () => dispatch(getImage()),
+  getImage: (page) => dispatch(getImage(page)),
 })
 
 
